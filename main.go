@@ -3,8 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"net"
-	"strconv"
 	"strings"
 
 	C "github.com/Fndroid/network-helper/constant"
@@ -29,44 +27,29 @@ func main() {
 	}
 
 	if *httpProxy != "" {
-		host, port, err := net.SplitHostPort(*httpProxy)
+		proxy, err := C.ParseProxyURL(*httpProxy)
 		if err == nil {
-			portInt, err := strconv.Atoi(port)
-			if err == nil {
-				S.SetProxy(C.HTTP, host, portInt)
-			} else {
-				fmt.Println("port is not a integer")
-			}
+			S.SetProxy(C.HTTP, *proxy)
 		} else {
-			fmt.Println("http proxy format error")
+			fmt.Println(err)
 		}
 	}
 
 	if *httpsProxy != "" {
-		host, port, err := net.SplitHostPort(*httpsProxy)
+		proxy, err := C.ParseProxyURL(*httpsProxy)
 		if err == nil {
-			portInt, err := strconv.Atoi(port)
-			if err == nil {
-				S.SetProxy(C.HTTPS, host, portInt)
-			} else {
-				fmt.Println("port is not a integer")
-			}
+			S.SetProxy(C.HTTPS, *proxy)
 		} else {
-			fmt.Println("https proxy format error")
+			fmt.Println(err)
 		}
 	}
 
 	if *socksProxy != "" {
-		host, port, err := net.SplitHostPort(*socksProxy)
+		proxy, err := C.ParseProxyURL(*socksProxy)
 		if err == nil {
-			portInt, err := strconv.Atoi(port)
-			if err == nil {
-				S.SetProxy(C.SOCKS, host, portInt)
-			} else {
-				fmt.Println("port is not a integer")
-			}
+			S.SetProxy(C.SOCKS, *proxy)
 		} else {
-			fmt.Println("socks proxy format error")
+			fmt.Println(err)
 		}
 	}
 

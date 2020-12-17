@@ -23,13 +23,16 @@ func SetBypass(domains []string) error {
 	return nil
 }
 
-func SetProxy(pt C.ProxyType, server string, port int) error {
+func SetProxy(pt C.ProxyType, proxy C.Proxy) error {
 	nts, err := common.NetworkTypes()
 	if err != nil {
 		return err
 	}
 	for _, nt := range nts {
-		args := []string{pt.SetCommand(), nt.String(), server, strconv.Itoa(port)}
+		args := []string{pt.SetCommand(), nt.String(), proxy.Host, strconv.Itoa(proxy.Port)}
+		if proxy.Username != "" && proxy.Password != "" {
+			args = append(args, "on", proxy.Username, proxy.Password)
+		}
 		cmd := exec.Command(common.COMMAND, args...)
 		cmd.Run()
 	}
@@ -76,5 +79,3 @@ func ShowProxy() (string, error) {
 	}
 	return strings.Join(result, "\n"), nil
 }
-
-
