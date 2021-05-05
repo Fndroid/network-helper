@@ -2,6 +2,7 @@ package dns
 
 import (
 	"fmt"
+	"net"
 	"os/exec"
 	"strings"
 
@@ -35,7 +36,7 @@ func ShowDNS() (string, error) {
 			continue
 		}
 		servers := common.SplitFilter(string(out), "\n", func(s string) bool {
-			return s != ""
+			return net.ParseIP(s) != nil
 		})
 		result = append(result, fmt.Sprintf("%s=%s; ", nt.String(), strings.Join(servers, ",")))
 	}
